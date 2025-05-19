@@ -1,0 +1,303 @@
+<?php
+
+
+namespace App\Http\Controllers\ApprovalOfAssistance;
+use App\Http\Controllers\Controller;
+
+
+use App\Models\ClientModel;
+use App\Models\BeneficiaryModel;
+use App\Models\TransactionModel;
+use App\Models\AddressMetadataModel;
+
+use App\Models\ClientBeneficiaryRelationshipModel;
+use App\Models\TransactionApproveAmountModel;
+use App\Models\TransactionApproveModel;
+use App\Models\TransactionApproveStatusConditionModel;
+use App\Models\TransactionApproveStatusModel;
+
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+
+class SearchApproveController extends Controller
+{
+    /**
+     * Display a listing of the resource.
+     */
+
+    public function searchTransactionID(Request $request){
+
+        
+        $addressMetadata = AddressMetadataModel::get();
+
+        /**
+         * Key mapped the address
+         */
+        $addressMapped = [];
+        $regionCounter = 0;
+        $region_list = $addressMetadata[0]['address_metadata'];
+
+        uksort($region_list, 'strnatcmp');
+
+        foreach ($region_list as &$region) {
+            // Sort provinces inside each region
+            if (isset($region['province_list'])) {
+                uksort($region['province_list'], 'strnatcmp');
+    
+                foreach ($region['province_list'] as &$province) {
+                    // Sort municipalities inside each province
+                    if (isset($province['municipality_list'])) {
+                        uksort($province['municipality_list'], 'strnatcmp');
+    
+                        foreach ($province['municipality_list'] as &$municipality) {
+                            // Sort barangays inside each municipality
+                            if (isset($municipality['barangay_list']) && is_array($municipality['barangay_list'])) {
+                                sort($municipality['barangay_list'], SORT_NATURAL);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        foreach($region_list as $regionKey => $regionValue){
+
+            $regionArray = [
+                'region_id' => $regionCounter,
+                'region_key' => $regionKey,
+                'region_name' => $regionValue['region_name']
+            ];
+
+            $addressMapped[$regionCounter] = $regionArray;
+
+            $provinceCounter = 0;
+            foreach($regionValue['province_list'] as $provinceKey => $provinceValue){
+                $provinceArray = [
+                    $provinceCounter => $provinceKey,
+                ];
+                
+                $addressMapped[$regionCounter]['province_list'][$provinceCounter] = $provinceArray;
+
+                $municipalityCounter = 0;
+                foreach($provinceValue['municipality_list'] as $municipalityKey => $municipalityValue){
+                    $municipalityArray = [
+                        $municipalityCounter => $municipalityKey,
+                    ];
+
+                    $addressMapped[$regionCounter]['province_list'][$provinceCounter]['municipality_list'][$municipalityCounter] = $municipalityArray;
+
+                    $barangayCounter = 0;
+                    foreach($municipalityValue['barangay_list'] as $barangayKey => $barangayValue){
+
+                        $barangayArray = [
+                            $barangayCounter => $barangayValue,
+
+                        ];
+                        $addressMapped[$regionCounter]['province_list'][$provinceCounter]['municipality_list'][$municipalityCounter]['barangay_list'][$barangayCounter] = $barangayArray;
+                        $barangayCounter++;
+                    }
+
+                    $municipalityCounter++;
+                }
+                $provinceCounter++;
+            }
+            $regionCounter++;
+        }
+
+        
+        $transaction = TransactionModel::select('id','transaction_id','client_id','agency_id','agency_program_id','assistance_type_id','date_request')
+        ->with(['client' => function($query){
+            $query->select('client.id','client.first_name','client.middle_name','client.last_name','client.suffix_id','client.birthdate','client.street','client.region_id','client.province_id','client.city_id','client.barangay_id');
+        },'client.suffix'])
+        ->with(['beneficiaryTransaction','beneficiaryTransaction.suffix'])
+        ->with('transactionApprove.transactionApproveStatusCondition')
+        ->with(['agency','agencyProgram','assistanceType','transactionApprove'])
+        ->where("transaction_id", 'like', "%".$request['data']['transaction_id']."%")
+        ->orderBy('created_at', 'desc')
+        ->limit(100)
+        ->get();
+
+    
+
+        $transaction_approve = $transaction->count();
+    
+
+
+        foreach($transaction as $transactionKey => &$transactionValue){
+            if(isset($transactionValue['client'])){
+                $transactionValue['client']['region'] = $addressMapped[$transactionValue['client']['region_id']]['region_key'];
+                $transactionValue['client']['province'] = $addressMapped[$transactionValue['client']['region_id']]['province_list'][$transactionValue['client']['province_id']][$transactionValue['client']['province_id']];
+                $transactionValue['client']['city'] = $addressMapped[$transactionValue['client']['region_id']]['province_list'][$transactionValue['client']['province_id']]['municipality_list'][$transactionValue['client']['city_id']][$transactionValue['client']['city_id']];
+                $transactionValue['client']['barangay'] = $addressMapped[$transactionValue['client']['region_id']]['province_list'][$transactionValue['client']['province_id']]['municipality_list'][$transactionValue['client']['city_id']]['barangay_list'][$transactionValue['client']['barangay_id']][$transactionValue['client']['barangay_id']];
+            }
+        }
+
+
+         
+        $divideTransaction = [];
+        $divideCounter = 0;
+        $arrayCounter = 0;
+        foreach($transaction as $trans){
+
+            if($divideCounter == 5){
+                $arrayCounter++;
+                $divideCounter = 0;
+            }
+            $divideTransaction[$arrayCounter][$divideCounter] = $trans;
+            $divideCounter++;
+        } 
+         
+
+
+        return response()->json(['transaction' => $divideTransaction, 'transaction_approve_count' => $transaction_approve]);
+
+    }
+    
+     
+    public function searchClient(Request $request)
+    {
+        //
+
+
+
+        $addressMetadata = AddressMetadataModel::get();
+
+        /**
+         * Key mapped the address
+         */
+        $addressMapped = [];
+        $regionCounter = 0;
+        $region_list = $addressMetadata[0]['address_metadata'];
+
+        uksort($region_list, 'strnatcmp');
+
+        foreach ($region_list as &$region) {
+            // Sort provinces inside each region
+            if (isset($region['province_list'])) {
+                uksort($region['province_list'], 'strnatcmp');
+    
+                foreach ($region['province_list'] as &$province) {
+                    // Sort municipalities inside each province
+                    if (isset($province['municipality_list'])) {
+                        uksort($province['municipality_list'], 'strnatcmp');
+    
+                        foreach ($province['municipality_list'] as &$municipality) {
+                            // Sort barangays inside each municipality
+                            if (isset($municipality['barangay_list']) && is_array($municipality['barangay_list'])) {
+                                sort($municipality['barangay_list'], SORT_NATURAL);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        foreach($region_list as $regionKey => $regionValue){
+
+            $regionArray = [
+                'region_id' => $regionCounter,
+                'region_key' => $regionKey,
+                'region_name' => $regionValue['region_name']
+            ];
+
+            $addressMapped[$regionCounter] = $regionArray;
+
+            $provinceCounter = 0;
+            foreach($regionValue['province_list'] as $provinceKey => $provinceValue){
+                $provinceArray = [
+                    $provinceCounter => $provinceKey,
+                ];
+                
+                $addressMapped[$regionCounter]['province_list'][$provinceCounter] = $provinceArray;
+
+                $municipalityCounter = 0;
+                foreach($provinceValue['municipality_list'] as $municipalityKey => $municipalityValue){
+                    $municipalityArray = [
+                        $municipalityCounter => $municipalityKey,
+                    ];
+
+                    $addressMapped[$regionCounter]['province_list'][$provinceCounter]['municipality_list'][$municipalityCounter] = $municipalityArray;
+
+                    $barangayCounter = 0;
+                    foreach($municipalityValue['barangay_list'] as $barangayKey => $barangayValue){
+
+                        $barangayArray = [
+                            $barangayCounter => $barangayValue,
+
+                        ];
+                        $addressMapped[$regionCounter]['province_list'][$provinceCounter]['municipality_list'][$municipalityCounter]['barangay_list'][$barangayCounter] = $barangayArray;
+                        $barangayCounter++;
+                    }
+
+                    $municipalityCounter++;
+                }
+                $provinceCounter++;
+            }
+            $regionCounter++;
+        }
+
+
+        
+        $transaction = TransactionModel::select('transaction.id','transaction.transaction_id','transaction.client_id','transaction.agency_id','transaction.agency_program_id','transaction.assistance_type_id','transaction.date_request')
+        ->whereHas('client', function($query) use ($request){
+
+            $fullNameParts = explode(' ', $request['data']['client_fullname']);
+
+            $query->leftJoin('suffix', 'client.suffix_id', '=', 'suffix.id');
+
+            foreach ($fullNameParts as $namePart) {
+                $query->where(function ($subQuery) use ($namePart) {
+                    $subQuery->where('client.first_name', 'LIKE', '%' . $namePart . '%')
+                            ->orWhere('client.middle_name', 'LIKE', '%' . $namePart . '%')
+                            ->orWhere('client.last_name', 'LIKE', '%' . $namePart . '%')
+                            ->orWhere('suffix.suffix', 'LIKE', '%' . $namePart . '%');
+                });
+            }
+
+        })
+        ->with(['client' => function($query){
+            $query->select('client.id','client.first_name','client.middle_name','client.last_name','client.suffix_id','client.birthdate','client.street','client.region_id','client.province_id','client.city_id','client.barangay_id');
+        },'client.suffix'])
+        ->with(['beneficiaryTransaction','beneficiaryTransaction.suffix'])
+        ->with('transactionApprove.transactionApproveStatusCondition')
+        ->with(['agency','agencyProgram','assistanceType','transactionApprove'])
+        ->orderBy('transaction.created_at', 'desc')
+        ->limit(100)
+        ->get();
+
+
+
+        $transaction_approve = $transaction->count();
+    
+
+
+        foreach($transaction as $transactionKey => &$transactionValue){
+            if(isset($transactionValue['client'])){
+                $transactionValue['client']['region'] = $addressMapped[$transactionValue['client']['region_id']]['region_key'];
+                $transactionValue['client']['province'] = $addressMapped[$transactionValue['client']['region_id']]['province_list'][$transactionValue['client']['province_id']][$transactionValue['client']['province_id']];
+                $transactionValue['client']['city'] = $addressMapped[$transactionValue['client']['region_id']]['province_list'][$transactionValue['client']['province_id']]['municipality_list'][$transactionValue['client']['city_id']][$transactionValue['client']['city_id']];
+                $transactionValue['client']['barangay'] = $addressMapped[$transactionValue['client']['region_id']]['province_list'][$transactionValue['client']['province_id']]['municipality_list'][$transactionValue['client']['city_id']]['barangay_list'][$transactionValue['client']['barangay_id']][$transactionValue['client']['barangay_id']];
+            }
+        }
+
+        $divideTransaction = [];
+        $divideCounter = 0;
+        $arrayCounter = 0;
+        foreach($transaction as $trans){
+
+            if($divideCounter == 5){
+                $arrayCounter++;
+                $divideCounter = 0;
+            }
+            $divideTransaction[$arrayCounter][$divideCounter] = $trans;
+            $divideCounter++;
+        } 
+         
+
+
+        return response()->json(['transaction' => $divideTransaction, 'transaction_approve_count' => $transaction_approve]);
+       
+    }
+
+  
+}
