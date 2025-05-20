@@ -21,9 +21,9 @@ class ClientImageController extends Controller
         // }
    
         if(!isset($request['data']['clientImage'])){
-            return Storage::disk('public')->response('images/congonylogo.webp');
+            return Storage::disk('public')->response('images/ljfloader.webp');
         }else if($request['data']['clientImage'] === null || $request['data']['clientImage'] === "null" || $request['data']['clientImage'] === 'undefined'){
-            return Storage::disk('public')->response('images/congonylogo.webp');
+            return Storage::disk('public')->response('images/ljfloader.webp');
         }else{
             return Storage::disk('local')->response("client_images/{$request['data']['clientImage']}");
         }

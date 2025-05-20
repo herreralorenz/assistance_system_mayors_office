@@ -4,7 +4,7 @@
             <div class="d-flex flex-row h-100 ">
                 <div class="cong">
                     <Transition>
-                        <img v-if="transition" src="/storage/images/congonyferrer.webp" class="congony">
+                        <img v-if="transition" src="/storage/images/mayorjon.webp" class="congony">
                     </Transition>
                 </div>
                 <div class="logo">
@@ -13,19 +13,16 @@
                             <p  v-if="transition" class="welcome-text">WELCOME.</p>
                         </Transition>
                         <Transition>
-                            <p  v-if="transition" class="district-6">6TH DISTRICT OF CAVITE ASSISTANCE SYSTEM</p>
+                            <p  v-if="transition" class="district-6">CITY OF GENERAL TRIAS ASSISTANCE SYSTEM</p>
                         </Transition>
                     </div>
                     <hr>
                     <div >
                         <Transition>
-                                <img v-if="transition" src="/storage/images/congressmanonyferrerlogo.webp"  class="congonylogo">
+                                <img v-if="transition" src="/storage/images/ljf.webp"  class="congonylogo">
                         </Transition>
                         <Transition>
-                                <img v-if="transition" src="/storage/images/district6.webp"  class="congonylogo">
-                        </Transition>
-                        <Transition>
-                                <img v-if="transition" src="/storage/images/hor.webp"  class="hor">
+                                <img v-if="transition" src="/storage/images/cityofgeneraltrias.webp"  class="hor">
                         </Transition>
                     </div>
                 </div>

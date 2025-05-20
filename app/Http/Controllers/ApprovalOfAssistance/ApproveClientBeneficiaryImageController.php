@@ -35,9 +35,9 @@ class ApproveClientBeneficiaryImageController extends Controller
 
     
         if(!isset($request['data']['clientApproveImage'])){
-            return Storage::disk('public')->response('images/congonylogo.webp');
+            return Storage::disk('public')->response('images/ljfloader.webp');
         }else if($request['data']['clientApproveImage'] === null || $request['data']['clientApproveImage'] === "null" || $request['data']['clientApproveImage'] === 'undefined'){
-            return Storage::disk('public')->response('images/congonylogo.webp');
+            return Storage::disk('public')->response('images/ljfloader.webp');
         }else{
             return Storage::disk('local')->response("client_images/{$request['data']['clientApproveImage']}");
         }
@@ -53,9 +53,9 @@ class ApproveClientBeneficiaryImageController extends Controller
         }
 
         if(!isset($request['data']['beneficiaryApproveImage'])){
-            return Storage::disk('local')->response("public/images/congonylogo.webp");
+            return Storage::disk('local')->response("public/images/ljfloader.webp");
         }else if($request['data']['beneficiaryApproveImage'] === null || $request['data']['beneficiaryApproveImage'] === "null" || $request['data']['beneficiaryApproveImage'] === 'undefined'){
-            return Storage::disk('local')->response("public/images/congonylogo.webp");
+            return Storage::disk('local')->response("public/images/ljfloader.webp");
         }else{
             return Storage::disk('local')->response("beneficiary_images/{$request['data']['beneficiaryApproveImage']}");
         }

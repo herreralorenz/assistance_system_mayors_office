@@ -31,9 +31,9 @@ class ClaimClientBeneficiaryImageController extends Controller
         }
 
         if(!isset($request['data']['clientClaimImage'])){
-            return Storage::disk('public')->response('images/congonylogo.webp');
+            return Storage::disk('public')->response('images/ljfloader.webp');
         }else if($request['data']['clientClaimImage'] === 'undefined'){
-            return Storage::disk('public')->response('images/congonylogo.webp');
+            return Storage::disk('public')->response('images/ljfloader.webp');
         }else{
             return Storage::disk('local')->response("client_images/{$request['data']['clientClaimImage']}");
         }
@@ -53,9 +53,9 @@ class ClaimClientBeneficiaryImageController extends Controller
         }
         
         if(!isset($request['data']['beneficiaryClaimImage'])){
-            return Storage::disk('local')->response("public/images/congonylogo.webp");
+            return Storage::disk('local')->response("public/images/ljfloader.webp");
         }else if($request['data']['beneficiaryClaimImage'] === null || $request['data']['beneficiaryClaimImage'] === "null" ||  $request['data']['beneficiaryClaimImage'] === 'undefined'){
-            return Storage::disk('local')->response("public/images/congonylogo.webp");
+            return Storage::disk('local')->response("public/images/ljfloader.webp");
         }else{
             return Storage::disk('local')->response("beneficiary_images/{$request['data']['beneficiaryClaimImage']}");
         }

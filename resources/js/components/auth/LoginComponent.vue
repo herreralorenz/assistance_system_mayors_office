@@ -9,8 +9,8 @@
           <div class="col-sm-6 text-black">
     
             <div class="px-5 ms-xl-4 mt-3 text-center">
-                <img @load="congOnylogoPicMethod" src="/storage/images/congressmanonyferrerlogo.webp"
-                alt="Login image" class="img-fluid w-30 h-30" >
+                <img @load="congOnylogoPicMethod" src="/storage/images/ljf.webp"
+                alt="Login image" class="img-fluid" style="height: 250px;">
             </div>
     
             <div class="d-flex align-items-center h-custom-2 px-5 ms-xl-4 mt-5 pt-5 pt-xl-0 mt-xl-n5">
@@ -45,7 +45,7 @@
           <div class="col-sm-6 px-0 vh-100 d-flex align-items-center justify-content-center position-relative" >
             <div class="gradient h-100 w-100">
             </div>
-            <img @load="congonyPicMethod" src="/storage/images/congonylogin.webp"
+            <img @load="congonyPicMethod" src="/storage/images/mayorjonlogin.webp"
             alt="Login image" class="object-fit-cover h-100 w-100">
           </div>
         </div>

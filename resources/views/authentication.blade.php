@@ -16,7 +16,7 @@
     <link href="https://fonts.bunny.net/css?family=Nunito" rel="stylesheet">
 
     
-    <link rel="icon" type="image/png" href="{{ asset('storage/images/congonylogo.webp') }}">
+    <link rel="icon" type="image/png" href="{{ asset('storage/images/ljf.webp') }}">
 
     <!-- Scripts -->
     @vite(['resources/sass/app.scss', 'resources/js/app.js'])

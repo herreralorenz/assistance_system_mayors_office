@@ -1,5 +1,5 @@
 <template>
-    <div id="sidebar-wrapper" class="flex-shrink-0 p-3"><a class="d-flex align-items-center pb-3 mb-3 link-dark text-decoration-none border-bottom"><img :src="'/storage/images/congressmanonyferrerlogo.webp'" class="img-fluid" src="" width="70" style="padding: 5px;" /><span class="fs-6 fw-semibold text-white">Assistance System</span></a>
+    <div id="sidebar-wrapper" class="flex-shrink-0 p-3"><a class="d-flex align-items-center pb-3 mb-3 link-dark text-decoration-none border-bottom"><img :src="'/storage/images/ljf.webp'" class="img-fluid" src="" width="85" style="padding: 5px;" /><span class="fs-6 fw-semibold text-white">Assistance System</span></a>
         <ul class="list-unstyled ps-0">
             <button v-if="this.computedFetchAuthUserRolesPermissions['user_permissions'].some(value => {if(value.name === 'dashboard'){return true}}) || this.computedFetchAuthUserRolesPermissions['user_roles'].some(value => {if(value === 'superAdmin'){return true}})" @click="this.navigate('dashboard')" class="btn align-items-center rounded collapsed text-white">
                 Dashboard
@@ -113,7 +113,7 @@
 
         margin-left: -250px;
         overflow-y: auto;
-        background: url('/storage/images/congony.webp');
+        background: url('/storage/images/mayorjonnavigation.webp');
         background-size: cover; /* Ensure the image covers the container */
         background-repeat: no-repeat; /* Prevent the image from repeating */
         background-position: -60px;

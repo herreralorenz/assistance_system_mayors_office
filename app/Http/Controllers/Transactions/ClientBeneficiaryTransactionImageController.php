@@ -39,9 +39,9 @@ class ClientBeneficiaryTransactionImageController extends Controller
         }
 
         if(!isset($request['data']['clientTransactionImage'])){
-            return Storage::disk('local')->response("public/images/congonylogo.webp");
+            return Storage::disk('local')->response("public/images/ljfloader.webp");
         }else if($request['data']['clientTransactionImage'] === null || $request['data']['clientTransactionImage'] === "null" || $request['data']['clientTransactionImage'] === 'undefined'){
-            return Storage::disk('local')->response("public/images/congonylogo.webp");
+            return Storage::disk('local')->response("public/images/ljfloader.webp");
         }else{
             return Storage::disk('local')->response("client_images/{$request['data']['clientTransactionImage']}");
         }
@@ -57,9 +57,9 @@ class ClientBeneficiaryTransactionImageController extends Controller
         }
 
         if(!isset($request['data']['beneficiaryTransactionImage'])){
-            return Storage::disk('local')->response("public/images/congonylogo.webp");
+            return Storage::disk('local')->response("public/images/ljfloader.webp");
         }else if($request['data']['beneficiaryTransactionImage'] === null || $request['data']['beneficiaryTransactionImage'] === "null" || $request['data']['beneficiaryTransactionImage'] === 'undefined'){
-            return Storage::disk('local')->response("public/images/congonylogo.webp");
+            return Storage::disk('local')->response("public/images/ljfloader.webp");
         }else{
             return Storage::disk('local')->response("beneficiary_images/{$request['data']['beneficiaryTransactionImage']}");
         }

@@ -9,9 +9,7 @@
                         <label class="fs-2 fw-bold ">Client Information</label>
                         <hr>
                         <div class="d-flex flex-row">
-                            <img :src="this.computedClaimClientDetails[0].approve_transaction.transaction.client?.image[0]?.file_name
-                                ? `/api/get-client-claim-image?data[clientClaimImage]=` + this.computedClaimClientDetails[0].approve_transaction.transaction.client?.image[0]?.file_name
-                                : '/storage/images/congonylogo.webp'"></img>
+                            <img :src="`/api/get-client-claim-image?data[clientClaimImage]=` + this.computedClaimClientDetails[0].approve_transaction.transaction.client?.image[0]?.file_name"></img>
                             <div class="d-flex flex-column justify-content-center ms-2">
                                 <span class="fs-5 fw-bold">{{
                                     this.computedClaimClientDetails[0].approve_transaction.transaction.client.full_name
@@ -173,9 +171,7 @@
                         <span class="fs-2 fw-bold">Beneficiary Information</span>
                         <hr>
                         <div class="d-flex flex-row">
-                            <img :src="this.computedClaimClientDetails[0].approve_transaction.transaction.client?.client_beneficiary_relationship[0]?.image[0]?.file_name
-                                ? `/api/get-beneficiary-claim-image?data[beneficiaryClaimImage]=` + this.computedClaimClientDetails[0].approve_transaction.transaction.client?.client_beneficiary_relationship[0]?.image[0]?.file_name
-                                : '/storage/images/congonylogo.webp'"></img>
+                            <img :src="`/api/get-beneficiary-claim-image?data[beneficiaryClaimImage]=` + this.computedClaimClientDetails[0].approve_transaction.transaction.client?.client_beneficiary_relationship[0]?.image[0]?.file_name"></img>
                             <div class="d-flex flex-column justify-content-center ms-2">
                                 <span class="fs-5 fw-bold">{{
                                     this.computedClaimClientDetails[0].approve_transaction.transaction.client.client_beneficiary_relationship[0]?.full_name
