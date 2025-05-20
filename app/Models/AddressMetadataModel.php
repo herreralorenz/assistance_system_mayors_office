@@ -16,7 +16,7 @@ class AddressMetadataModel extends Model
     ];
 
     // for conversion
-    protected $casts = [
-        'address_metadata' => 'array'  //this converts json to array
-    ];
+    // protected $casts = [
+    //     'address_metadata' => 'array'  //this converts json to array
+    // ];
 }

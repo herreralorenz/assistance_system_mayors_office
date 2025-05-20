@@ -10,6 +10,12 @@ cmds = [
     "..."
 ]
 
+[phases.start]
+cmds = [
+  "chown -R www-data:www-data /app/storage /app/bootstrap/cache",
+  "chmod -R ug+rw /app/storage /app/bootstrap/cache",
+]
+
 [start]
 cmd = '/assets/start.sh'
 
