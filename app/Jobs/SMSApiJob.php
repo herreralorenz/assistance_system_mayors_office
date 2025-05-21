@@ -58,7 +58,7 @@ class SMSApiJob implements ShouldQueue, ShouldBeUnique
             try {
                 // Process each SMS
                 foreach ($this->selectedSMS as $key => $value) {
-                    $apikey = env('HTTP_SMS');
+                    $apikey = env('HTTP_SMS_KEY');
                     $fromNumber = env('HTTP_SMS_FROM_CONTACT_NUMBER');
 
                     $transactionApproveStatusConditionModel = TransactionApproveStatusConditionModel::where('transaction_approve_id','=',$value['id'])->where('transaction_approve_status_id','=',2)->first();
